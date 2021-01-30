@@ -1,23 +1,7 @@
 const calculateSalesTax = function(salesData, taxRates) {
   let results = {};
-  console.log(results);
   for (let x = 0; x < salesData.length; x++) {
-    console.log(salesData[x].name);
     let companyName = salesData[x].name;
-    if (!results[companyName]) {
-      results[companyName] = {}
-      let salesTotal = 0;
-      for (let y = 0; y < salesData[x].sales.length; y++) {
-        salesTotal += salesData[x].sales[y];
-      }
-      results[companyName]["totalSales"] = salesTotal;
-    } else {
-      let salesTotal = 0;
-      for (let y = 0; y < salesData[x].sales.length; y++) {
-        salesTotal += salesData[x].sales[y];
-      }
-      results[companyName]["totalSales"] += salesTotal;
-    } 
     let provTax = 0;
     if (salesData[x].province === 'AB') {
       provTax = 0.05;
@@ -26,7 +10,19 @@ const calculateSalesTax = function(salesData, taxRates) {
     } else if (salesData[x].province === 'SK') {
       provTax = 0.10;
     }
-    results[companyName]["totalTaxes"] = provTax * results[companyName]["totalSales"];
+    let salesTotal = 0;
+    for (let y = 0; y < salesData[x].sales.length; y++) {
+      salesTotal += salesData[x].sales[y];
+    }
+    let taxTotal = salesTotal * provTax;
+    if (!results[companyName]) {
+      results[companyName] = {}
+      results[companyName]["totalSales"] = salesTotal;
+      results[companyName]["totalTaxes"] = taxTotal;
+    } else {
+      results[companyName]["totalSales"] += salesTotal;
+      results[companyName]["totalTaxes"] += taxTotal;
+    }
   }
   console.log(results);
 }
